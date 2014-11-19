@@ -5,8 +5,13 @@ import sbt.classpath.ClasspathUtilities
 import java.io.File
 import java.util.regex.Pattern
 import scala.util.matching.Regex
+import java.security.MessageDigest
 
 object Merge {
+  def md5(s: String) = {
+    MessageDigest.getInstance("MD5").digest(s.getBytes).map("%02X".format(_)).mkString
+  }
+
   object EntryPath {
     val pattern = Pattern.compile(if (File.separator == "\\") "\\\\" else File.separator)
 
@@ -36,7 +41,7 @@ object Merge {
   def entries(sources: Seq[File], tmp: File): Seq[Entry] = {
     sources flatMap { source =>
       val base = if (ClasspathUtilities.isArchive(source)) {
-        val unzipped = tmp / source.getCanonicalPath
+        val unzipped = tmp / md5(source.getCanonicalPath)
         IO.unzip(source, unzipped)
         unzipped
       } else source
