@@ -4,7 +4,7 @@ import sbt._
 import sbt.Keys._
 import com.typesafe.sbt.proguard.Merge
 
-object SbtProguard extends Plugin {
+object Plugin extends sbt.Plugin {
 
   val Proguard = config("proguard").hide
 
